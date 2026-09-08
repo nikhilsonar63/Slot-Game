@@ -73,5 +73,8 @@ The reels also stop at different times to create a more realistic slot-machine e
 - Random Number Generation
 - Animation
 - WebGL
+🎮 Play the Game
+
+"Play Slot Game on Itch.io" (https://nikhilsonar.itch.io/slot-game)
 
 
