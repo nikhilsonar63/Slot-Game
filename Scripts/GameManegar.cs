@@ -14,15 +14,17 @@ public class SlotMachine : MonoBehaviour
     public TMP_Text coinTx;
    
     public Animator anim;
-    public Text resultText;
+    public Text ResultText;
     public Button spineButton;
+    public Text massegeText;
 
     public Button EMIBUTTON;
 
     public int EMI = 10;
     public int counTep;
     public int Manny = 5000;
-    public bool lonePurchesse = false;
+    public bool loanPurchesse = false;
+    public bool penaltyApplied = false;
     private int totalSymbols = 4;
 
     // Keep the money value between 0 and 5000 and update the coin UI
@@ -39,7 +41,7 @@ public class SlotMachine : MonoBehaviour
         Manny -= 100;
 
         // Check if the player currently has an active loan
-        if (lonePurchesse)
+        if (loanPurchesse)
         {
             // Count the number of spins made after taking the loan
             counTep += 1;
@@ -47,22 +49,36 @@ public class SlotMachine : MonoBehaviour
             // Deduct EMI after every 4 spins
             if (counTep >= 4)
             {
-                Manny -= 500;
-                EMI -= 1;
-                counTep = 0;
-                Debug.Log("emi-");
-               
-
-                // Check if all EMIs have been paid
-                if (EMI <= 0)
+                if (loanPurchesse && Manny <= 499)
                 {
-                    lonePurchesse = false;
-                    EMI = 0;
-                    Debug.Log("lone ok");
+                    penaltyApplied = true;
+                    massegeText.text = " PENALTY APPLIED! EMI + 1";
                 }
+                else
+                {
+                    penaltyApplied = false;
+                }
+                if (penaltyApplied)
+                {
+                    EMI += 1;
+                }
+                else if (loanPurchesse&&Manny>=500)
+                {
+                   
+                    Manny -= 500;
+                    EMI -= 1;
+                    massegeText.text = "EMI PAID! EMI -1";
+                }
+                counTep = 0;
             }
-           
-           
+            if (EMI <= 0)
+            {
+                loanPurchesse = false;
+                EMI = 0;
+                massegeText.text = "LOAN CLOSED SUCCESSFULLY!";
+            }
+
+
         }
 
         // Stop the spin if the player has no money
@@ -74,7 +90,7 @@ public class SlotMachine : MonoBehaviour
         // Play the slot machine animation
         anim.Play("slot");
         spineButton.interactable = false;
-        resultText.text = "Spinning...";
+        ResultText.text = "Spinning...";
 
         // Generate a random result for each reel
         int result1 = Random.Range(0, totalSymbols);
@@ -94,14 +110,14 @@ public class SlotMachine : MonoBehaviour
     public void loneButton()
     {
         // Prevent taking another loan while the current loan is active
-        if (lonePurchesse)
+        if (loanPurchesse)
         {
             return;
         }
 
         // Give the player 5000 coins
         Manny += 5000;
-        lonePurchesse = true;
+        loanPurchesse = true;
         EMI = 10;
         counTep = 0;
     }
@@ -115,13 +131,13 @@ public class SlotMachine : MonoBehaviour
         // Player wins when all three symbols are the same
         if (r1 == r2 && r2 == r3)
         {
-            resultText.text = "JACKPOT! YOU WIN! 🤑";
+            ResultText.text = "JACKPOT! YOU WIN! 🤑";
             Manny += 300;
             Debug.Log("JACKPOT! YOU WIN!🔷🔹");
         }
         else
         {
-            resultText.text = "YOU LOSE! TRY AGAIN!";
+            ResultText.text = "YOU LOSE! TRY AGAIN!";
 
             Debug.Log("YOU LOSE! TRY AGAIN!");
         }
